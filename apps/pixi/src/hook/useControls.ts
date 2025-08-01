@@ -12,6 +12,7 @@ export const useControls = () => {
   const [heldDirections, setHeldDirections] = useState<Direction[]>([]);
 
   const handleKey = useCallback((e: KeyboardEvent, isKeyDown: boolean) => {
+    e.preventDefault()
     const direction = DIRECTION_KEYS[e.code];
     if (!direction) return;
 

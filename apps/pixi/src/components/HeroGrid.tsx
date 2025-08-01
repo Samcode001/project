@@ -41,7 +41,7 @@ const HeroGrid = ({ texture }: IHeroProps) => {
     const { x, y } = position.current;
     currentDirection.current = direction;
     const newTarget = calculateNewTarget(x, y, direction);
-
+    console.log(position.current);
     if (checkCanMove(newTarget)) targetPosition.current = newTarget;
   }, []);
 
@@ -76,7 +76,17 @@ const HeroGrid = ({ texture }: IHeroProps) => {
 
   return (
     <>
-      <Container>{sprite && <Sprite texture={sprite.texture} x={position.current.x} y={position.current.y} scale={0.5} anchor={[0,0.4]}/>}</Container>
+      <Container>
+        {sprite && (
+          <Sprite
+            texture={sprite.texture}
+            x={position.current.x}
+            y={position.current.y}
+            scale={0.5}
+            anchor={[0, 0.4]}
+          />
+        )}
+      </Container>
     </>
   );
 };
