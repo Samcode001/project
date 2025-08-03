@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   ANIMATION_SPEED,
   DEFAULT_X_POS,
@@ -18,9 +18,10 @@ import { useControls } from "../hook/useControls";
 
 interface IHeroProps {
   texture: Texture;
+  updateHeroPosition: (x: number, y: number) => void;
 }
 
-const HeroGrid = ({ texture }: IHeroProps) => {
+const HeroGrid = ({ texture, updateHeroPosition }: IHeroProps) => {
   const position = useRef({ x: DEFAULT_X_POS, y: DEFAULT_Y_POS });
   const targetPosition = useRef<{ x: number; y: number } | null>(null);
   const currentDirection = useRef<Direction | null>(null);
@@ -35,6 +36,10 @@ const HeroGrid = ({ texture }: IHeroProps) => {
     totalFrames: 9,
     animationSpeed: ANIMATION_SPEED,
   });
+
+  useEffect(() => {
+    updateHeroPosition(position.current.x, position.current.y);
+  }, [updateHeroPosition]);
 
   const setNextTarget = useCallback((direction: Direction) => {
     if (targetPosition.current) return;
@@ -63,8 +68,8 @@ const HeroGrid = ({ texture }: IHeroProps) => {
       isMoving.current = true;
 
       if (completed) {
-        //   const { x, y } = position.current
-        //   onMove(x, y)
+        const { x, y } = position.current;
+        updateHeroPosition(x, y);
 
         targetPosition.current = null;
         isMoving.current = false;
