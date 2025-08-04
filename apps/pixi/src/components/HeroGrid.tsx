@@ -22,9 +22,9 @@ interface IHeroProps {
 }
 
 const HeroGrid = ({ texture, updateHeroPosition }: IHeroProps) => {
-  const position = useRef({ x: DEFAULT_X_POS, y: DEFAULT_Y_POS });
-  const targetPosition = useRef<{ x: number; y: number } | null>(null);
-  const currentDirection = useRef<Direction | null>(null);
+  const position = useRef({ x: DEFAULT_X_POS, y: DEFAULT_Y_POS }); // Tracks the current pixel coordinates of the hero on the map.
+  const targetPosition = useRef<{ x: number; y: number } | null>(null); //If the hero is moving, this is the destination cell’s pixel coordinates. If null, the hero is idle.
+  const currentDirection = useRef<Direction | null>(null); // Current facing/moving direction, e.g., "UP", "DOWN".
   const isMoving = useRef(false);
 
   const { getControlsDirection } = useControls();
@@ -41,8 +41,9 @@ const HeroGrid = ({ texture, updateHeroPosition }: IHeroProps) => {
     updateHeroPosition(position.current.x, position.current.y);
   }, [updateHeroPosition]);
 
+  //When an arrow key is pressed, this decides if a move should start and which cell to move toward.
   const setNextTarget = useCallback((direction: Direction) => {
-    if (targetPosition.current) return;
+    if (targetPosition.current) return; // If already moving, ignores new inputs until arrived.
     const { x, y } = position.current;
     currentDirection.current = direction;
     const newTarget = calculateNewTarget(x, y, direction);
@@ -87,7 +88,7 @@ const HeroGrid = ({ texture, updateHeroPosition }: IHeroProps) => {
             texture={sprite.texture}
             x={position.current.x}
             y={position.current.y}
-            scale={0.5}
+            scale={0.8}
             anchor={[0, 0.4]}
           />
         )}

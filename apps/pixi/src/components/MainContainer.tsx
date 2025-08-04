@@ -1,7 +1,6 @@
 import { Texture } from "pixi.js";
 import { useCallback, useMemo, useState, type PropsWithChildren } from "react";
 import { Container, Sprite } from "@pixi/react";
-// import { Camera } from "./Camera";
 import HeroGrid from "./HeroGrid";
 import map from "../assets/tilemap.png";
 import {
@@ -42,19 +41,19 @@ const MainContainer = ({
       <Container scale={canvasSize.scale}>
         {/* <Sprite image={map} width={GAME_WIDTH} height={GAME_HEIGHT} /> */}
         <Camera heroPosition={heroPosition} canvasSize={canvasSize}>
-          <Sprite
-            image={map}
-            width={GAME_WIDTH}
-            height={GAME_HEIGHT + OFFSET_Y}
-            scale={1}
-            x={OFFSET_X}
-            y={OFFSET_Y}
-          />
-          {children}
-          <HeroGrid
-            texture={heroTexture}
-            updateHeroPosition={updateHeroPosition}
-          />
+        <Sprite
+          image={map}
+          width={GAME_WIDTH}
+          height={GAME_HEIGHT}
+          scale={1} 
+          // x={OFFSET_X}
+          // y={OFFSET_Y}
+        />
+        {children}
+        <HeroGrid
+          texture={heroTexture}
+          updateHeroPosition={updateHeroPosition}
+        />
         </Camera>
       </Container>
     </>
