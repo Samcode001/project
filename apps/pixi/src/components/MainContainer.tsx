@@ -6,8 +6,6 @@ import map from "../assets/tilemap.png";
 import {
   GAME_HEIGHT,
   GAME_WIDTH,
-  OFFSET_X,
-  OFFSET_Y,
   TILE_SIZE,
 } from "../constants/game-world";
 import HeroSprite from "../assets/hero_sprite.png";
@@ -45,7 +43,7 @@ const MainContainer = ({
           image={map}
           width={GAME_WIDTH}
           height={GAME_HEIGHT}
-          scale={1} 
+          // scale={1} 
           // x={OFFSET_X}
           // y={OFFSET_Y}
         />
