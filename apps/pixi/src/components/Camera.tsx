@@ -1,4 +1,4 @@
-import { useEffect, useRef, type PropsWithChildren } from "react";
+import { useRef, type PropsWithChildren } from "react";
 import { Container, useTick } from "@pixi/react";
 import { Graphics as PIXIGraphics } from "pixi.js";
 import { TILE_SIZE, ZOOM } from "../constants/game-world";
