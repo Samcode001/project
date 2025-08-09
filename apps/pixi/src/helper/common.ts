@@ -17,8 +17,8 @@ export const calcluateDimesions = () => {
 
   // const height = windowHeight
   // const width = windowWidth
-  console.log(windowHeight, windowWidth);
-  console.log(height, width, scale);
+  // console.log(windowHeight, windowWidth);
+  // console.log(height, width, scale);
   return { height, width, scale };
 };
 
