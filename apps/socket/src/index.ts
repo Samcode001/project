@@ -19,10 +19,11 @@ app.get("/", (req, res) => {
 //This sets up an event listener for when any client connects to the Socket.io server.
 //Each connected client gets a unique socket.
 io.on("connection", (socket) => {
-  console.log("A new user connected");
+  let date = new Date(Date.now());
+  console.log("A new user connected", socket.id, date.toISOString());
   //Listens for a "move-avatar" event sent from this client. The event includes some data — typically the avatar's position or state.
   socket.on("move-avatar", (data) => {
-    socket.broadcast.emit("avatar-move", data); //Takes the received data and sends an "avatar-move" event to all other clients except the one who sent the original event.
+    socket.broadcast.emit("other-avatar-move", data); //Takes the received data and sends an "avatar-move" event to all other clients except the one who sent the original event.
   });
 });
 

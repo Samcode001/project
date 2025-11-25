@@ -19,9 +19,14 @@ import { useControls } from "../hook/useControls";
 interface IHeroProps {
   texture: Texture;
   updateHeroPosition: (x: number, y: number) => void;
+  setCurrentDirection: (direction: Direction) => void;
 }
 
-const HeroGrid = ({ texture, updateHeroPosition }: IHeroProps) => {
+const HeroGrid = ({
+  texture,
+  updateHeroPosition,
+  setCurrentDirection,
+}: IHeroProps) => {
   const position = useRef({ x: DEFAULT_X_POS, y: DEFAULT_Y_POS }); // Tracks the current pixel coordinates of the hero on the map.
   const targetPosition = useRef<{ x: number; y: number } | null>(null); //If the hero is moving, this is the destination cell’s pixel coordinates. If null, the hero is idle.
   const currentDirection = useRef<Direction | null>(null); // Current facing/moving direction, e.g., "UP", "DOWN".
@@ -47,8 +52,10 @@ const HeroGrid = ({ texture, updateHeroPosition }: IHeroProps) => {
     const { x, y } = position.current;
     currentDirection.current = direction;
     const newTarget = calculateNewTarget(x, y, direction);
-    // console.log(position.current);
-    if (checkCanMove(newTarget)) targetPosition.current = newTarget;
+    if (checkCanMove(newTarget)) {
+      setCurrentDirection(direction);
+      targetPosition.current = newTarget;
+    }
   }, []);
 
   useTick((delta) => {
