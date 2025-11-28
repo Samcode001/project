@@ -15,8 +15,6 @@ const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET!;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET!;
 // console.log(process.env.ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET);
 
-type User = { id: string; name: string; username: string; password: string };
-const users = new Map<string, User>();
 const refreshTokens = new Map<string, string>();
 
 const signRefreshToken = (userId: string) => {
@@ -44,13 +42,6 @@ router.post("/signup", async (req, res) => {
   const userId = uuidv4();
   const hashedPassword = await hash(parsedData.data.password);
   try {
-    // users.set(parsedData.data.username, {
-    //   id: userId,
-    //   name: parsedData.data.name,
-    //   username: parsedData.data.username,
-    //   password: hashedPassword,
-    // });
-
     const user = await client.user.create({
       data: {
         id: userId,
@@ -65,9 +56,9 @@ router.post("/signup", async (req, res) => {
 
     res.cookie(COOKIE_NAME, refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/auth/refresh",
+      secure: true,
+      sameSite: "none",
+      path: "/",
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
     res.status(200).json({
@@ -89,7 +80,6 @@ router.post("/signin", async (req, res) => {
     return;
   }
   try {
-    // const user = users.get(parsedData.data.username);
     const user = await client.user.findUnique({
       where: {
         username: parsedData.data.username,
@@ -111,9 +101,9 @@ router.post("/signin", async (req, res) => {
 
     res.cookie(COOKIE_NAME, refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/auth/refresh",
+      secure: true,
+      sameSite: "none",
+      path: "/",
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
@@ -141,20 +131,26 @@ router.post("/refresh", async (req, res) => {
   }
 });
 
-router.post("/logout", async (req, res) => {
-  const token = req.cookies[COOKIE_NAME];
-  if (token) refreshTokens.delete(token);
+router.post("/logout", (req, res) => {
+  res.clearCookie(COOKIE_NAME, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+  });
+
+  res.json({ message: "Logged out" });
 });
 
 router.get("/profile", authenticateAccessToken, async (req, res) => {
-  const userId = (req as any).user;
+  const userToken = (req as any).user;
   // fetch user from DB
   const user = await client.user.findUnique({
     where: {
-      id: userId,
+      id: userToken.userId,
     },
   });
-  console.log(userId, user);
+  // console.log(userToken, user);
   if (!user) return res.status(404).json({ message: "User not found" });
   return res.json({ id: user.id, username: user.username });
 });

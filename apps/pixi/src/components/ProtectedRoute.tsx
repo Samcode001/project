@@ -3,7 +3,11 @@ import { Navigate } from "react-router-dom";
 import type { JSX } from "@emotion/react/jsx-runtime";
 
 export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { accessToken } = useAuth();
+  const { accessToken, loading } = useAuth();
+
+  if (loading) return <div>Loading...</div>;
+
   if (!accessToken) return <Navigate to="/signin" replace />;
+
   return children;
 };

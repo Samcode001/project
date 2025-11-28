@@ -20,8 +20,8 @@ const SignIn = () => {
     e.preventDefault();
     try {
       // axios.post("http://localhost:3000/v1/user/signin", userData);
-      login(userData.username, userData.password);
-      navigate("/profile");
+      const success = await login(userData.username, userData.password);
+      if (success) navigate("/");
     } catch (error) {
       console.error(error);
     }

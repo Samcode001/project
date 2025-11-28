@@ -1,23 +1,41 @@
 import { useEffect, useState } from "react";
 import { useAxiosAuth } from "../api/axiosClient";
+import { Button } from "@mui/material";
 
 export const Profile = () => {
   const axiosAuth = useAxiosAuth();
   const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  const handleLogout = async () => {
+    await axiosAuth.post("/logout");
+    window.location.reload();
+  };
 
   useEffect(() => {
-    let mounted = true;
-    axiosAuth
-      .get("/profile")
-      .then((res) => {
-        if (mounted) setProfile(res.data);
-      })
-      .catch(console.error);
-    return () => {
-      mounted = false;
+    const fetchProfile = async () => {
+      try {
+        const res = await axiosAuth.get("/profile");
+        setProfile(res.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
-  }, [axiosAuth]);
 
-  if (!profile) return <div>Loading…</div>;
-  return <div>Welcome, {profile.username}</div>;
+    fetchProfile();
+  }, []);
+
+  if (loading) return <div>Loading…</div>;
+  if (!profile) return <div>Not logged in</div>;
+
+  return (
+    <div>
+      Welcome, {profile.username}
+      <Button variant="contained" color="primary" onClick={handleLogout}>
+        Logout
+      </Button>
+    </div>
+  );
 };

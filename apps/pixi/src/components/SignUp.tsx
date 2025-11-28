@@ -22,8 +22,12 @@ const SignUp = () => {
     e.preventDefault();
     try {
       // axios.post("http://localhost:3000/signup", userData);
-      signUp(userData.name, userData.username, userData.password);
-      navigate("/");
+      const success = await signUp(
+        userData.name,
+        userData.username,
+        userData.password
+      );
+      if (success) navigate("/");
     } catch (error) {
       console.error(error);
     }

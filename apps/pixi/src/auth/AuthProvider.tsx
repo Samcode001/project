@@ -1,4 +1,10 @@
-import { createContext, useState, useContext, type ReactNode } from "react";
+import {
+  createContext,
+  useState,
+  useContext,
+  type ReactNode,
+  useEffect,
+} from "react";
 import axios from "axios";
 
 const API = import.meta.env.VITE_AUTH_API_URL;
@@ -6,8 +12,13 @@ const API = import.meta.env.VITE_AUTH_API_URL;
 
 type AuthContextType = {
   accessToken: string | null;
-  signUp: (name: string, username: string, password: string) => Promise<void>;
-  login: (username: string, password: string) => Promise<void>;
+  loading: boolean | null;
+  signUp: (
+    name: string,
+    username: string,
+    password: string
+  ) => Promise<Boolean>;
+  login: (username: string, password: string) => Promise<Boolean>;
   logout: () => Promise<void>;
   refreshAccessToken: () => Promise<string | null>;
 };
@@ -22,6 +33,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const signUp = async (name: string, username: string, password: string) => {
     const res = await axios.post(
@@ -29,7 +41,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       { name, username, password },
       { withCredentials: true }
     );
-    setAccessToken(res.data.accessToken);
+    if (res.status === 200) {
+      setAccessToken(res.data.accessToken);
+    } else {
+      throw new Error("Invalid username or password");
+    }
+    return res.status === 200 ? true : false;
   };
 
   const login = async (username: string, password: string) => {
@@ -39,7 +56,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       { username, password },
       { withCredentials: true }
     );
-    setAccessToken(res.data.accessToken);
+    if (res.status === 200) {
+      setAccessToken(res.data.accessToken);
+    } else {
+      throw new Error("Invalid username or password");
+    }
+    return res.status === 200 ? true : false;
   };
 
   const logout = async () => {
@@ -63,9 +85,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  useEffect(() => {
+    const init = async () => {
+      await refreshAccessToken(); // gets a new access token (if refresh cookie is valid)
+      setLoading(false); // tell app that refresh attempt is done
+    };
+    init();
+  }, []);
+
   return (
     <AuthContext.Provider
-      value={{ accessToken, signUp, login, logout, refreshAccessToken }}
+      value={{
+        accessToken,
+        loading,
+        signUp,
+        login,
+        logout,
+        refreshAccessToken,
+        // setAccessToken, // optional if you want manual setting
+      }}
     >
       {children}
     </AuthContext.Provider>

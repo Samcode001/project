@@ -17,6 +17,7 @@ import OtherAvatarSprite from "../assets/other_avatars.png";
 import socket from "../helper/socket";
 import OtherAvatars from "./OtherAvatars";
 import type { Direction } from "../types/common";
+import Camera from "./Camera";
 
 interface IMainContainerProps {
   canvasSize: {
@@ -110,44 +111,44 @@ const MainContainer = ({
       <Container scale={canvasSize.scale}>
         {/* <Sprite image={map} width={GAME_WIDTH} height={GAME_HEIGHT} /> */}
 
-        {/* <Camera heroPosition={heroPosition} canvasSize={canvasSize}> */}
-        <Sprite
-          image={map}
-          width={GAME_WIDTH}
-          height={GAME_HEIGHT}
-          // scale={1}
-          // x={OFFSET_X}
-          // y={OFFSET_Y}
-        />
-        {children}
-        <HeroGrid
-          texture={heroTexture}
-          updateHeroPosition={updateHeroPosition}
-          setCurrentDirection={setCurrentDirection}
-        />
+        <Camera heroPosition={heroPosition} canvasSize={canvasSize}>
+          <Sprite
+            image={map}
+            width={GAME_WIDTH}
+            height={GAME_HEIGHT}
+            // scale={1}
+            // x={OFFSET_X}
+            // y={OFFSET_Y}
+          />
+          {children}
+          <HeroGrid
+            texture={heroTexture}
+            updateHeroPosition={updateHeroPosition}
+            setCurrentDirection={setCurrentDirection}
+          />
 
-        {usersAvatars
-          .filter((avatar) => Boolean(avatar.id))
-          .map((avatar, index) => {
-            // console.log("other avatrs id ", index, avatar.id, avatar.x, avatar.y);
-            return (
-              <OtherAvatars
-                key={index}
-                texture={othersAvatarsTexture}
-                AVATAR_X_POS={avatar.x}
-                AVATAR_Y_POS={avatar.y}
-                AVATAR_DIRECTION={avatar.direction}
-                avatarId={avatar.id}
-              />
-            );
-          })}
+          {usersAvatars
+            .filter((avatar) => Boolean(avatar.id))
+            .map((avatar, index) => {
+              // console.log("other avatrs id ", index, avatar.id, avatar.x, avatar.y);
+              return (
+                <OtherAvatars
+                  key={index}
+                  texture={othersAvatarsTexture}
+                  AVATAR_X_POS={avatar.x}
+                  AVATAR_Y_POS={avatar.y}
+                  AVATAR_DIRECTION={avatar.direction}
+                  avatarId={avatar.id}
+                />
+              );
+            })}
 
-        {/* <OtherAvatars
+          {/* <OtherAvatars
           texture={heroTexture}
           AVATAR_X_POS={10}
           AVATAR_Y_POS={18}
         /> */}
-        {/* </Camera> */}
+        </Camera>
       </Container>
     </>
   );
