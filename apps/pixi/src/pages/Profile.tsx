@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAxiosAuth } from "../api/axiosClient";
 
 export const Profile = () => {
@@ -7,10 +7,15 @@ export const Profile = () => {
 
   useEffect(() => {
     let mounted = true;
-    axiosAuth.get("/profile").then(res => {
-      if (mounted) setProfile(res.data);
-    }).catch(console.error);
-    return () => { mounted = false; };
+    axiosAuth
+      .get("/profile")
+      .then((res) => {
+        if (mounted) setProfile(res.data);
+      })
+      .catch(console.error);
+    return () => {
+      mounted = false;
+    };
   }, [axiosAuth]);
 
   if (!profile) return <div>Loading…</div>;

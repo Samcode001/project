@@ -29,10 +29,18 @@ function App() {
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/*" element={<h1>Not Found</h1>} />
             <Route
-              path="/main"
+              path="/"
               element={
                 <ProtectedRoute>
                   <Experience />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
                 </ProtectedRoute>
               }
             />

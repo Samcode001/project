@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 interface IUserData {
   username: string;
@@ -13,12 +14,14 @@ const SignIn = () => {
   });
 
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       // axios.post("http://localhost:3000/v1/user/signin", userData);
       login(userData.username, userData.password);
+      navigate("/profile");
     } catch (error) {
       console.error(error);
     }
@@ -38,6 +41,7 @@ const SignIn = () => {
           type="text"
           name="username"
           placeholder="username"
+          value={userData.username}
           onChange={(e) =>
             setUserData({ ...userData, username: e.target.value })
           }
@@ -46,6 +50,7 @@ const SignIn = () => {
         <input
           type="password"
           name="password"
+          value={userData.password}
           onChange={(e) =>
             setUserData({ ...userData, password: e.target.value })
           }

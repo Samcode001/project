@@ -3,6 +3,8 @@ import { signInSchema, signUpSchema } from "../../types";
 import { compare, hash } from "../../scrypt";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
+import client from "@repo/db";
+import { authenticateAccessToken } from "../../middleware/Authenticate";
 
 const router = express.Router();
 
@@ -28,8 +30,8 @@ const signAccessToken = (userId: string) => {
     expiresIn: "15m",
   });
 };
-
 router.post("/signup", async (req, res) => {
+  // console.log(users);
   // const { name, username, password } = req.body;
 
   const parsedData = signUpSchema.safeParse(req.body);
@@ -42,11 +44,20 @@ router.post("/signup", async (req, res) => {
   const userId = uuidv4();
   const hashedPassword = await hash(parsedData.data.password);
   try {
-    users.set(userId, {
-      id: userId,
-      name: parsedData.data.name,
-      username: parsedData.data.username,
-      password: hashedPassword,
+    // users.set(parsedData.data.username, {
+    //   id: userId,
+    //   name: parsedData.data.name,
+    //   username: parsedData.data.username,
+    //   password: hashedPassword,
+    // });
+
+    const user = await client.user.create({
+      data: {
+        id: userId,
+        name: parsedData.data.name,
+        username: parsedData.data.username,
+        password: hashedPassword,
+      },
     });
 
     const accessToken = signAccessToken(userId);
@@ -68,6 +79,8 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/signin", async (req, res) => {
+  // console.log(users);
+  // console.log(req.body);
   const parsedData = signInSchema.safeParse(req.body);
 
   if (!parsedData.success) {
@@ -76,7 +89,13 @@ router.post("/signin", async (req, res) => {
     return;
   }
   try {
-    const user = users.get(parsedData.data.username);
+    // const user = users.get(parsedData.data.username);
+    const user = await client.user.findUnique({
+      where: {
+        username: parsedData.data.username,
+      },
+    });
+    // console.log(parsedData, parsedData.data, user);
     if (!user) {
       res.status(401).json({ message: "Invalid username or password" });
       return;
@@ -125,6 +144,19 @@ router.post("/refresh", async (req, res) => {
 router.post("/logout", async (req, res) => {
   const token = req.cookies[COOKIE_NAME];
   if (token) refreshTokens.delete(token);
+});
+
+router.get("/profile", authenticateAccessToken, async (req, res) => {
+  const userId = (req as any).user;
+  // fetch user from DB
+  const user = await client.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+  console.log(userId, user);
+  if (!user) return res.status(404).json({ message: "User not found" });
+  return res.json({ id: user.id, username: user.username });
 });
 
 export { router };

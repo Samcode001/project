@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 interface IUserData {
   name: string;
@@ -15,12 +16,14 @@ const SignUp = () => {
   });
 
   const { signUp } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       // axios.post("http://localhost:3000/signup", userData);
       signUp(userData.name, userData.username, userData.password);
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
