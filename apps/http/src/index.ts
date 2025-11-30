@@ -4,6 +4,7 @@ dotenv.config();
 import { router } from "./routes/v1";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import userRouter from "./routes/v1/userRoutes";
 
 // import { userRouter } from "./routes/user.route";
 // import { errorHandler } from "./middlewares/errorHandler";
@@ -21,6 +22,7 @@ app.use(
 );
 
 app.use("/v1/auth", router);
+app.use("/v1/user", userRouter);
 // app.use(errorHandler);
 
 app.listen(3000, () => {

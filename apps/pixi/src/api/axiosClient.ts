@@ -16,8 +16,9 @@ export const useAxiosAuth = () => {
   const { accessToken, refreshAccessToken } = useAuth();
 
   // Create instance
-  const axiosAuth = axios.create({      //New axios instance that will be used only for authenticated calls.
-    baseURL: import.meta.env.VITE_AUTH_API_URL,
+  const axiosAuth = axios.create({
+    //New axios instance that will be used only for authenticated calls.
+    baseURL: import.meta.env.VITE_USER_API_URL,
     // baseURL: "http://localhost:3000/v1",
     withCredentials: true,
   });

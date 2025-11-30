@@ -11,7 +11,7 @@ import { Container, Sprite } from "@pixi/react";
 import HeroGrid from "./HeroGrid";
 import map from "../assets/tilemap.png";
 import { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE } from "../constants/game-world";
-import HeroSprite from "../assets/hero_sprite.png";
+// import HeroSprite from "../assets/hero_sprite.png";
 import OtherAvatarSprite from "../assets/other_avatars.png";
 // import Camera from "./Camera";
 import socket from "../helper/socket";
@@ -25,6 +25,7 @@ interface IMainContainerProps {
     width: number;
     scale: number;
   };
+  userSprite: string;
 }
 
 interface IAvatar {
@@ -36,13 +37,13 @@ interface IAvatar {
 
 const MainContainer = ({
   canvasSize,
+  userSprite,
   children,
 }: PropsWithChildren<IMainContainerProps>) => {
   const [usersAvatars, setUsersAvatars] = useState<IAvatar[]>([]);
   const [currentDirection, setCurrentDirection] = useState<Direction | null>(
     null
   );
-
   const [heroPosition, setHeroPosition] = useState({
     x: 0,
     y: 0,
@@ -100,7 +101,7 @@ const MainContainer = ({
     });
   }, []);
 
-  const heroTexture = useMemo(() => Texture.from(HeroSprite), []);
+  const heroTexture = useMemo(() => Texture.from(userSprite), []);
   const othersAvatarsTexture = useMemo(
     () => Texture.from(OtherAvatarSprite),
     []

@@ -27,7 +27,7 @@ const SignUp = () => {
         userData.username,
         userData.password
       );
-      if (success) navigate("/");
+      if (success) navigate("/avatars");
     } catch (error) {
       console.error(error);
     }

@@ -9,6 +9,7 @@ import SignInPage from "./pages/SignInPage";
 import { AuthProvider } from "./auth/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Profile } from "./pages/Profile";
+import AvatarsPage from "./pages/AvatarsPage";
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -24,12 +25,11 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            {/* <Route path="/main" element={<Experience />} /> */}
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/*" element={<h1>Not Found</h1>} />
             <Route
-              path="/"
+              path="/arena"
               element={
                 <ProtectedRoute>
                   <Experience />
@@ -41,6 +41,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/avatars"
+              element={
+                <ProtectedRoute>
+                  <AvatarsPage />
                 </ProtectedRoute>
               }
             />
