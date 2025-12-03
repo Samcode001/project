@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   ANIMATION_SPEED,
   MOVE_SPEED,
@@ -6,7 +6,6 @@ import {
 } from "../constants/game-world";
 import type { Direction } from "../types/common";
 import { useHeroAnimation } from "../hook/useHeroAnimation";
-import type { Texture } from "pixi.js";
 import {
   calculateNewTarget,
   // calculateNewTarget,
@@ -14,22 +13,24 @@ import {
   handleMovement,
 } from "../helper/common";
 import { Container, Sprite, useTick } from "@pixi/react";
+import { Texture as TextureImport } from "pixi.js";
+
 // import { useControls } from "../hook/useControls";
 
 interface IHeroProps {
-  texture: Texture;
   AVATAR_Y_POS: number;
   AVATAR_X_POS: number;
   avatarId: string;
   AVATAR_DIRECTION: Direction;
+  AVATAR_IMAGE: string;
   //   updateHeroPosition: (x: number, y: number) => void;
 }
 
 const OtherAvatars = ({
-  texture,
   AVATAR_X_POS,
   AVATAR_Y_POS,
   AVATAR_DIRECTION,
+  AVATAR_IMAGE,
   // avatarId,
 }: IHeroProps) => {
   const avatar_position = useRef({
@@ -41,6 +42,12 @@ const OtherAvatars = ({
   const isMoving = useRef(false);
 
   //   const { getControlsDirection } = useControls();
+  // console.log(AVATAR_X_POS, AVATAR_Y_POS, AVATAR_DIRECTION);
+
+  const texture = useMemo(
+    () => TextureImport.from(`/avatars/${AVATAR_IMAGE}.png`),
+    []
+  );
 
   useEffect(() => {
     avatar_position.current = { x: AVATAR_X_POS, y: AVATAR_Y_POS };

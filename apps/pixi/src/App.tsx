@@ -1,8 +1,5 @@
-// import './App.css'
-
-import { useEffect } from "react";
 import Experience from "./components/Experience";
-import socket from "./helper/socket";
+// import socket from "./helper/socket";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
@@ -14,11 +11,11 @@ import AvatarsPage from "./pages/AvatarsPage";
 function App() {
   // const [count, setCount] = useState(0)
 
-  useEffect(() => {
-    socket.on("connection", () => {
-      console.log(" A new user connected");
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.on("connection", () => {
+  //     console.log(" A new user connected");
+  //   });
+  // }, []);
 
   return (
     <>
@@ -27,7 +24,7 @@ function App() {
           <Routes>
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/signin" element={<SignInPage />} />
-            <Route path="/*" element={<h1>Not Found</h1>} />
+
             <Route
               path="/arena"
               element={
@@ -36,6 +33,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/profile"
               element={
@@ -44,6 +42,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/avatars"
               element={
@@ -52,6 +51,8 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route path="*" element={<h1>Not Found</h1>} />
           </Routes>
         </Router>
       </AuthProvider>

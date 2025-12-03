@@ -12,12 +12,13 @@ import HeroGrid from "./HeroGrid";
 import map from "../assets/tilemap.png";
 import { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE } from "../constants/game-world";
 // import HeroSprite from "../assets/hero_sprite.png";
-import OtherAvatarSprite from "../assets/other_avatars.png";
 // import Camera from "./Camera";
-import socket from "../helper/socket";
+// import socket from "../helper/socket";
+// import { socket } from "../auth/Socket";
 import OtherAvatars from "./OtherAvatars";
 import type { Direction } from "../types/common";
 import Camera from "./Camera";
+// import { useSocket } from "../hook/useSocket";
 
 interface IMainContainerProps {
   canvasSize: {
@@ -26,6 +27,7 @@ interface IMainContainerProps {
     scale: number;
   };
   userSprite: string;
+  Socket: any;
 }
 
 interface IAvatar {
@@ -33,12 +35,14 @@ interface IAvatar {
   x: number;
   y: number;
   direction: Direction;
+  avatar: string;
 }
 
 const MainContainer = ({
   canvasSize,
   userSprite,
   children,
+  Socket,
 }: PropsWithChildren<IMainContainerProps>) => {
   const [usersAvatars, setUsersAvatars] = useState<IAvatar[]>([]);
   const [currentDirection, setCurrentDirection] = useState<Direction | null>(
@@ -49,17 +53,24 @@ const MainContainer = ({
     y: 0,
   });
 
+  const { socket, socketUserId, socketAvatarId } = Socket();
+
   useEffect(() => {
+    if (!socket) return;
+
     socket.emit("move-avatar", {
-      id: socket.id,
+      id: socketUserId,
       x: heroPosition.x * TILE_SIZE,
       y: heroPosition.y * TILE_SIZE,
       direction: currentDirection,
+      avatar: socketAvatarId,
     });
   }, [heroPosition]);
 
   useEffect(() => {
+    if (!socket) return;
     const handleOthersAvatarMove = (data: IAvatar) => {
+      console.log(data);
       setUsersAvatars((prev) => {
         const index = prev.findIndex((item) => item.id === data.id);
         if (index !== -1) {
@@ -69,6 +80,7 @@ const MainContainer = ({
             x: data.x,
             y: data.y,
             direction: data.direction,
+            avatar: data.avatar,
           };
           console.log(
             "Received movement from other avatars",
@@ -79,7 +91,13 @@ const MainContainer = ({
         } else
           return [
             ...prev,
-            { id: data.id, x: data.x, y: data.y, direction: data.direction },
+            {
+              id: data.id,
+              x: data.x,
+              y: data.y,
+              direction: data.direction,
+              avatar: data.avatar,
+            },
           ];
       });
     };
@@ -88,7 +106,8 @@ const MainContainer = ({
     return () => {
       socket.off("other-avatar-move", handleOthersAvatarMove);
     };
-  }, [usersAvatars]);
+  }, [socket]); //  Your socket is created asynchronously, so when this effect runs:socket === null
+  //So events never fireThe moment socket is created → listener is added.
 
   useEffect(() => {
     console.log("usersAvatars", usersAvatars);
@@ -102,10 +121,6 @@ const MainContainer = ({
   }, []);
 
   const heroTexture = useMemo(() => Texture.from(userSprite), []);
-  const othersAvatarsTexture = useMemo(
-    () => Texture.from(OtherAvatarSprite),
-    []
-  );
 
   return (
     <>
@@ -135,11 +150,12 @@ const MainContainer = ({
               return (
                 <OtherAvatars
                   key={index}
-                  texture={othersAvatarsTexture}
+                  // texture={othersAvatarsTexture}
                   AVATAR_X_POS={avatar.x}
                   AVATAR_Y_POS={avatar.y}
                   AVATAR_DIRECTION={avatar.direction}
                   avatarId={avatar.id}
+                  AVATAR_IMAGE={avatar.avatar}
                 />
               );
             })}

@@ -4,7 +4,6 @@ import { compare, hash } from "../../scrypt";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import client from "@repo/db";
-import { authenticateAccessToken } from "../../middleware/Authenticate";
 
 const router = express.Router();
 
@@ -61,6 +60,7 @@ router.post("/signup", async (req, res) => {
       path: "/",
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
+
     res.status(200).json({
       accessToken,
     });
@@ -140,19 +140,6 @@ router.post("/logout", (req, res) => {
   });
 
   res.json({ message: "Logged out" });
-});
-
-router.get("/profile", authenticateAccessToken, async (req, res) => {
-  const userToken = (req as any).user;
-  // fetch user from DB
-  const user = await client.user.findUnique({
-    where: {
-      id: userToken.userId,
-    },
-  });
-  // console.log(userToken, user);
-  if (!user) return res.status(404).json({ message: "User not found" });
-  return res.json({ id: user.id, username: user.username });
 });
 
 export { router };
