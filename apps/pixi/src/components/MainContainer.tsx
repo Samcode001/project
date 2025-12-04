@@ -17,8 +17,7 @@ import { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE } from "../constants/game-world";
 // import { socket } from "../auth/Socket";
 import OtherAvatars from "./OtherAvatars";
 import type { Direction } from "../types/common";
-import Camera from "./Camera";
-// import { useSocket } from "../hook/useSocket";
+// import Camera from "./Camera";
 
 interface IMainContainerProps {
   canvasSize: {
@@ -70,7 +69,7 @@ const MainContainer = ({
   useEffect(() => {
     if (!socket) return;
     const handleOthersAvatarMove = (data: IAvatar) => {
-      console.log(data);
+      // console.log(data);
       setUsersAvatars((prev) => {
         const index = prev.findIndex((item) => item.id === data.id);
         if (index !== -1) {
@@ -82,11 +81,11 @@ const MainContainer = ({
             direction: data.direction,
             avatar: data.avatar,
           };
-          console.log(
-            "Received movement from other avatars",
-            data
-            // usersAvatars
-          );
+          // console.log(
+          //   "Received movement from other avatars",
+          //   data
+          //   // usersAvatars
+          // );
           return updated;
         } else
           return [
@@ -120,52 +119,50 @@ const MainContainer = ({
     });
   }, []);
 
-  const heroTexture = useMemo(() => Texture.from(userSprite), []);
+  const heroTexture = useMemo(() => {
+    if (!userSprite) return null;
+    return Texture.from(userSprite);
+  }, [userSprite]);
 
   return (
     <>
       <Container scale={canvasSize.scale}>
         {/* <Sprite image={map} width={GAME_WIDTH} height={GAME_HEIGHT} /> */}
 
-        <Camera heroPosition={heroPosition} canvasSize={canvasSize}>
-          <Sprite
-            image={map}
-            width={GAME_WIDTH}
-            height={GAME_HEIGHT}
-            // scale={1}
-            // x={OFFSET_X}
-            // y={OFFSET_Y}
-          />
-          {children}
-          <HeroGrid
-            texture={heroTexture}
-            updateHeroPosition={updateHeroPosition}
-            setCurrentDirection={setCurrentDirection}
-          />
-
-          {usersAvatars
-            .filter((avatar) => Boolean(avatar.id))
-            .map((avatar, index) => {
-              // console.log("other avatrs id ", index, avatar.id, avatar.x, avatar.y);
-              return (
-                <OtherAvatars
-                  key={index}
-                  // texture={othersAvatarsTexture}
-                  AVATAR_X_POS={avatar.x}
-                  AVATAR_Y_POS={avatar.y}
-                  AVATAR_DIRECTION={avatar.direction}
-                  avatarId={avatar.id}
-                  AVATAR_IMAGE={avatar.avatar}
-                />
-              );
-            })}
-
-          {/* <OtherAvatars
+        {/* <Camera heroPosition={heroPosition} canvasSize={canvasSize}> */}
+        <Sprite
+          image={map}
+          width={GAME_WIDTH}
+          height={GAME_HEIGHT}
+          // scale={1}
+          // x={OFFSET_X}
+          // y={OFFSET_Y}
+        />
+        {children}
+        <HeroGrid
           texture={heroTexture}
-          AVATAR_X_POS={10}
-          AVATAR_Y_POS={18}
-        /> */}
-        </Camera>
+          updateHeroPosition={updateHeroPosition}
+          setCurrentDirection={setCurrentDirection}
+          usersAvatars={usersAvatars}
+        />
+
+        {usersAvatars
+          .filter((avatar) => Boolean(avatar.id))
+          .map((avatar, index) => {
+            return (
+              <OtherAvatars
+                key={index}
+                // texture={othersAvatarsTexture}
+                AVATAR_X_POS={avatar.x}
+                AVATAR_Y_POS={avatar.y}
+                AVATAR_DIRECTION={avatar.direction}
+                avatarId={avatar.id}
+                AVATAR_IMAGE={avatar.avatar}
+              />
+            );
+          })}
+
+        {/* </Camera> */}
       </Container>
     </>
   );

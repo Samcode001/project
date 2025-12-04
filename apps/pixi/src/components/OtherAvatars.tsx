@@ -14,6 +14,7 @@ import {
 } from "../helper/common";
 import { Container, Sprite, useTick } from "@pixi/react";
 import { Texture as TextureImport } from "pixi.js";
+import ChatBubble from "../helper/chatBubble";
 
 // import { useControls } from "../hook/useControls";
 
@@ -74,8 +75,14 @@ const OtherAvatars = ({
     if (targetPosition.current) return; // If already moving, ignores new inputs until arrived.
     const { x, y } = avatar_position.current;
     currentDirection.current = direction;
-    console.log(x, y, direction, "Setnext target");
+    // console.log(x, y, direction, "Setnext target");
     const newTarget = calculateNewTarget(x, y, direction);
+    console.log(
+      "x:" + x,
+      "y:" + y,
+      "newTarget.x:" + newTarget.x,
+      "newTarget.y:" + newTarget.y
+    );
     if (checkCanMove(newTarget)) targetPosition.current = newTarget;
   }, []);
 
@@ -137,16 +144,13 @@ const OtherAvatars = ({
 
   return (
     <>
-      <Container>
+      <Container y={avatar_position.current.y} x={avatar_position.current.x}>
         {sprite && (
-          <Sprite
-            texture={sprite.texture}
-            y={avatar_position.current.y}
-            x={avatar_position.current.x}
-            scale={0.8}
-            anchor={[0, 0.3]}
-          />
+          <Sprite texture={sprite.texture} scale={0.8} anchor={[0, 0.3]} />
         )}
+        {/* Chat bubble */}
+
+        {/* <ChatBubble message={"just Better"} /> */}
       </Container>
     </>
   );

@@ -4,7 +4,7 @@ import type { Direction } from "../types/common";
 import { TILE_SIZE } from "../constants/game-world";
 
 interface UseSpriteAnimationProps {
-  texture: Texture;
+  texture: Texture | null;
   frameWidth: number;
   frameHeight: number;
   totalFrames: number;
@@ -40,6 +40,7 @@ export const useHeroAnimation = ({
 
   // Produces a Sprite object displaying the correct frame.
   const createSprite = (row: number, column: number) => {
+    if (!texture) return null;
     const frame = new Texture(
       texture.baseTexture,
       new Rectangle(

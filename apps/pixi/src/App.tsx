@@ -3,6 +3,7 @@ import Experience from "./components/Experience";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
+import HomePage from "./pages/HomePagePage";
 import { AuthProvider } from "./auth/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Profile } from "./pages/Profile";
@@ -23,6 +24,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/signin" element={<SignInPage />} />
 
             <Route

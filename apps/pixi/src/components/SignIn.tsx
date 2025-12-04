@@ -21,7 +21,7 @@ const SignIn = () => {
     try {
       // axios.post("http://localhost:3000/v1/user/signin", userData);
       const success = await login(userData.username, userData.password);
-      if (success) navigate("/");
+      if (success) navigate("/arena");
     } catch (error) {
       console.error(error);
     }

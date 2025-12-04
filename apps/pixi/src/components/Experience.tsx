@@ -50,7 +50,8 @@ const Experience = () => {
   const getuserAvatar = async () => {
     const res = await axiosAuth.get("/avatar");
     if (res.status === 200) {
-      setUserSprite(`/avatars/${res.data.avatarId}.png`);
+      let avatar = `/avatars/${res.data.avatarId}.png`;
+      setUserSprite(avatar);
     }
   };
 

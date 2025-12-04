@@ -5,7 +5,7 @@ import {
   GAME_WIDTH,
   TILE_SIZE,
 } from "../constants/game-world";
-import type { Direction, IPosition } from "../types/common";
+import type { Direction, IAvatar, IPosition } from "../types/common";
 
 export const calcluateDimesions = () => {
   const windowWidth = window.innerWidth * 0.97;
@@ -53,6 +53,19 @@ export const checkCanMove = (target: IPosition) => {
   }
 
   return COLLISION_MAP[index] !== 1;
+};
+
+// assumes TILE_SIZE is imported
+export const isPlayerBlocking = (x: number, y: number, avatars: IAvatar[]) => {
+  // convert the provided x,y (pixels OR tiles) to tile coords safely:
+  const targetTileX = Math.round(x / TILE_SIZE);
+  const targetTileY = Math.round(y / TILE_SIZE);
+
+  return avatars.some((avatar) => {
+    const avatarTileX = Math.round(avatar.x / TILE_SIZE);
+    const avatarTileY = Math.round(avatar.y / TILE_SIZE);
+    return avatarTileX === targetTileX && avatarTileY === targetTileY;
+  });
 };
 
 export const moveTowards = (

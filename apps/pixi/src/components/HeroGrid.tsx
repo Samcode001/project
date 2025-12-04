@@ -5,27 +5,31 @@ import {
   DEFAULT_Y_POS,
   MOVE_SPEED,
 } from "../constants/game-world";
-import type { Direction } from "../types/common";
+import type { Direction, IAvatar } from "../types/common";
 import { useHeroAnimation } from "../hook/useHeroAnimation";
-import type { Texture } from "pixi.js";
+import { type Texture } from "pixi.js";
 import {
   calculateNewTarget,
   checkCanMove,
   handleMovement,
+  isPlayerBlocking,
 } from "../helper/common";
 import { Container, Sprite, useTick } from "@pixi/react";
 import { useControls } from "../hook/useControls";
+import ChatBubble from "../helper/chatBubble";
 
 interface IHeroProps {
-  texture: Texture;
+  texture: Texture | null;
   updateHeroPosition: (x: number, y: number) => void;
   setCurrentDirection: (direction: Direction) => void;
+  usersAvatars: IAvatar[];
 }
 
 const HeroGrid = ({
   texture,
   updateHeroPosition,
   setCurrentDirection,
+  usersAvatars,
 }: IHeroProps) => {
   const position = useRef({ x: DEFAULT_X_POS, y: DEFAULT_Y_POS }); // Tracks the current pixel coordinates of the hero on the map.
   const targetPosition = useRef<{ x: number; y: number } | null>(null); //If the hero is moving, this is the destination cell’s pixel coordinates. If null, the hero is idle.
@@ -50,9 +54,18 @@ const HeroGrid = ({
   const setNextTarget = useCallback((direction: Direction) => {
     if (targetPosition.current) return; // If already moving, ignores new inputs until arrived.
     const { x, y } = position.current;
+    updateHeroPosition(x, y); // we need to give the postion of current to totherUser to set their new target
     currentDirection.current = direction;
     const newTarget = calculateNewTarget(x, y, direction);
-    if (checkCanMove(newTarget)) {
+    const isBlocking = isPlayerBlocking(newTarget.x, newTarget.y, usersAvatars);
+    // console.log(
+    //   isBlocking,
+    //   "x:" + x,
+    //   "y:" + y,
+    //   "newTarget.x:" + newTarget.x,
+    //   "newTarget.y:" + newTarget.y
+    // );
+    if (checkCanMove(newTarget) && !isBlocking) {
       setCurrentDirection(direction);
       targetPosition.current = newTarget;
     }
@@ -76,8 +89,7 @@ const HeroGrid = ({
       isMoving.current = true;
 
       if (completed) {
-        const { x, y } = position.current;
-        updateHeroPosition(x, y);
+        // const { x, y } = position.current;
 
         targetPosition.current = null;
         isMoving.current = false;
@@ -89,16 +101,12 @@ const HeroGrid = ({
 
   return (
     <>
-      <Container>
+      <Container x={position.current.x} y={position.current.y}>
         {sprite && (
-          <Sprite
-            texture={sprite.texture}
-            x={position.current.x}
-            y={position.current.y}
-            scale={0.8}
-            anchor={[0, 0.3]}
-          />
+          <Sprite texture={sprite.texture} scale={0.8} anchor={[0, 0.3]} />
         )}
+
+        {/* <ChatBubble message={"How are you doing like things"} /> */}
       </Container>
     </>
   );
