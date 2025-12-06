@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { useAxiosAuth } from "../api/axiosClient";
 import { Button } from "@mui/material";
+import { useAuth } from "../auth/AuthProvider";
 
 export const Profile = () => {
   const axiosAuth = useAxiosAuth();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  const {logout}=useAuth();
+
   const handleLogout = async () => {
-    await axiosAuth.post("/logout");
+     logout()
     window.location.reload();
   };
 

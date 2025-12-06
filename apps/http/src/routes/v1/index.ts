@@ -35,7 +35,8 @@ router.post("/signup", async (req, res) => {
 
   if (!parsedData.success) {
     console.log("parsed data incorrect");
-    res.status(400).json({ message: "Validation failed" });
+    const { fieldErrors } = parsedData.error.flatten();
+    res.status(400).json({ errors: fieldErrors });
     return;
   }
   const userId = uuidv4();
@@ -76,7 +77,8 @@ router.post("/signin", async (req, res) => {
 
   if (!parsedData.success) {
     console.log("parsed data incorrect");
-    res.status(400).json({ message: "Validation failed" });
+    const { fieldErrors } = parsedData.error.flatten();
+    res.status(400).json({ errors: fieldErrors });
     return;
   }
   try {
