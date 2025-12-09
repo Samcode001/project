@@ -1,4 +1,4 @@
-import Experience from "./components/Experience";
+// import Experience from "./components/Arena";
 // import socket from "./helper/socket";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUpPage from "./pages/SignUpPage";
@@ -8,6 +8,7 @@ import { AuthProvider } from "./auth/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Profile } from "./pages/Profile";
 import AvatarsPage from "./pages/AvatarsPage";
+import ArenaPage from "./pages/ArenaPage";
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -31,11 +32,10 @@ function App() {
               path="/arena"
               element={
                 <ProtectedRoute>
-                  <Experience />
+                  <ArenaPage />
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/profile"
               element={

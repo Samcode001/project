@@ -26,7 +26,9 @@ interface IMainContainerProps {
     scale: number;
   };
   userSprite: string;
-  Socket: any;
+  socket: any;
+  socketUserId: string;
+  socketAvatarId: string;
 }
 
 interface IAvatar {
@@ -41,7 +43,9 @@ const MainContainer = ({
   canvasSize,
   userSprite,
   children,
-  Socket,
+  socket,
+  socketUserId,
+  socketAvatarId,
 }: PropsWithChildren<IMainContainerProps>) => {
   const [usersAvatars, setUsersAvatars] = useState<IAvatar[]>([]);
   const [currentDirection, setCurrentDirection] = useState<Direction | null>(
@@ -52,7 +56,7 @@ const MainContainer = ({
     y: 0,
   });
 
-  const { socket, socketUserId, socketAvatarId } = Socket();
+  // const { socket, socketUserId, socketAvatarId } = Socket();
 
   useEffect(() => {
     if (!socket) return;
