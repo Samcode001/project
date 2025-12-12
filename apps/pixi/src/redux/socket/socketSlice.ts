@@ -6,6 +6,7 @@ interface SocketState {
   token: string | null;
   userId: string | null;
   avatarId: string | null;
+  username: string | null;
 }
 
 const initialState: SocketState = {
@@ -13,6 +14,7 @@ const initialState: SocketState = {
   token: null,
   userId: null,
   avatarId: null,
+  username: null,
 };
 
 const socketSlice = createSlice({
@@ -24,6 +26,7 @@ const socketSlice = createSlice({
       state.token = action.payload.token;
       state.userId = action.payload.userId;
       state.avatarId = action.payload.avatarId;
+      state.username = action.payload.username;
     },
   },
 });

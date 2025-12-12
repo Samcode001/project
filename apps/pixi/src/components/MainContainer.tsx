@@ -1,6 +1,5 @@
 import { Texture } from "pixi.js";
 import {
-  // use,
   useCallback,
   useEffect,
   useMemo,
@@ -11,13 +10,9 @@ import { Container, Sprite } from "@pixi/react";
 import HeroGrid from "./HeroGrid";
 import map from "../assets/tilemap.png";
 import { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE } from "../constants/game-world";
-// import HeroSprite from "../assets/hero_sprite.png";
-// import Camera from "./Camera";
-// import socket from "../helper/socket";
-// import { socket } from "../auth/Socket";
 import OtherAvatars from "./OtherAvatars";
 import type { Direction } from "../types/common";
-// import Camera from "./Camera";
+import Camera from "./Camera";
 
 interface IMainContainerProps {
   canvasSize: {
@@ -29,6 +24,10 @@ interface IMainContainerProps {
   socket: any;
   socketUserId: string;
   socketAvatarId: string;
+  socketUsername: string;
+  chatInput: string;
+  userChat: string;
+  userChatVisible: boolean;
 }
 
 interface IAvatar {
@@ -37,6 +36,7 @@ interface IAvatar {
   y: number;
   direction: Direction;
   avatar: string;
+  username: string;
 }
 
 const MainContainer = ({
@@ -46,6 +46,9 @@ const MainContainer = ({
   socket,
   socketUserId,
   socketAvatarId,
+  socketUsername,
+  userChat,
+  userChatVisible,
 }: PropsWithChildren<IMainContainerProps>) => {
   const [usersAvatars, setUsersAvatars] = useState<IAvatar[]>([]);
   const [currentDirection, setCurrentDirection] = useState<Direction | null>(
@@ -55,6 +58,12 @@ const MainContainer = ({
     x: 0,
     y: 0,
   });
+  const [nearbyPlayers, setNearbyPlayers] = useState<string[]>([]);
+
+  // ------------------- Chat codes ----------------
+  const [chatMessage, setChatMessage] = useState("");
+  const [chatMessageId, setChatMessageId] = useState("");
+  const [isBubbleVisible, setIsBubbleVisible] = useState(false);
 
   // const { socket, socketUserId, socketAvatarId } = Socket();
 
@@ -63,6 +72,7 @@ const MainContainer = ({
 
     socket.emit("move-avatar", {
       id: socketUserId,
+      username: socketUsername,
       x: heroPosition.x * TILE_SIZE,
       y: heroPosition.y * TILE_SIZE,
       direction: currentDirection,
@@ -84,6 +94,7 @@ const MainContainer = ({
             y: data.y,
             direction: data.direction,
             avatar: data.avatar,
+            username: data.username,
           };
           // console.log(
           //   "Received movement from other avatars",
@@ -100,20 +111,46 @@ const MainContainer = ({
               y: data.y,
               direction: data.direction,
               avatar: data.avatar,
+              username: data.username,
             },
           ];
       });
     };
+
+    const handleUserDisconnected = (userId: string) => {
+      // console.log("user disconnected", userId);
+      setUsersAvatars((prev) => {
+        const index = prev.findIndex((item) => item.id === userId);
+        if (index !== -1) {
+          prev.splice(index, 1);
+          return prev;
+        } else return prev;
+      });
+    };
+
+    const handleChatMessage = (data: any) => {
+      // console.log(data);
+      setChatMessageId(data.id);
+      setChatMessage(data.chat);
+      setIsBubbleVisible(true);
+      setTimeout(() => {
+        setIsBubbleVisible(false);
+      }, 15000);
+    };
     socket.on("other-avatar-move", handleOthersAvatarMove);
+    socket.on("user-disconnected", handleUserDisconnected);
+    socket.on("chat-message", handleChatMessage);
 
     return () => {
       socket.off("other-avatar-move", handleOthersAvatarMove);
+      socket.on("user-disconnected", handleUserDisconnected);
+      socket.off("chat-message", handleChatMessage);
     };
   }, [socket]); //  Your socket is created asynchronously, so when this effect runs:socket === null
   //So events never fireThe moment socket is created → listener is added.
 
   useEffect(() => {
-    console.log("usersAvatars", usersAvatars);
+    // console.log("usersAvatars", usersAvatars);
   }, [usersAvatars]);
 
   const updateHeroPosition = useCallback((x: number, y: number) => {
@@ -128,45 +165,64 @@ const MainContainer = ({
     return Texture.from(userSprite);
   }, [userSprite]);
 
+  const backgroundTexture = useMemo(() => {
+    // if (!backgroundSprite) return null;
+    return Texture.from("/avatars/arena-bg.png");
+  }, []);
+
   return (
     <>
       <Container scale={canvasSize.scale}>
-        {/* <Sprite image={map} width={GAME_WIDTH} height={GAME_HEIGHT} /> */}
-
-        {/* <Camera heroPosition={heroPosition} canvasSize={canvasSize}> */}
         <Sprite
           image={map}
           width={GAME_WIDTH}
           height={GAME_HEIGHT}
-          // scale={1}
-          // x={OFFSET_X}
-          // y={OFFSET_Y}
-        />
-        {children}
-        <HeroGrid
-          texture={heroTexture}
-          updateHeroPosition={updateHeroPosition}
-          setCurrentDirection={setCurrentDirection}
-          usersAvatars={usersAvatars}
+          texture={backgroundTexture}
         />
 
-        {usersAvatars
-          .filter((avatar) => Boolean(avatar.id))
-          .map((avatar, index) => {
-            return (
-              <OtherAvatars
-                key={index}
-                // texture={othersAvatarsTexture}
-                AVATAR_X_POS={avatar.x}
-                AVATAR_Y_POS={avatar.y}
-                AVATAR_DIRECTION={avatar.direction}
-                avatarId={avatar.id}
-                AVATAR_IMAGE={avatar.avatar}
-              />
-            );
-          })}
+        <Camera heroPosition={heroPosition} canvasSize={canvasSize}>
+          <Sprite
+            image={map}
+            width={GAME_WIDTH}
+            height={GAME_HEIGHT}
+            // scale={1}
+            // x={OFFSET_X}
+            // y={OFFSET_Y}
+          />
+          {children}
+          <HeroGrid
+            texture={heroTexture}
+            updateHeroPosition={updateHeroPosition}
+            setCurrentDirection={setCurrentDirection}
+            usersAvatars={usersAvatars}
+            socketUserId={socketUserId}
+            socket={socket}
+            setNearbyPlayers={setNearbyPlayers}
+            userChat={userChat}
+            userChatVisible={userChatVisible}
+          />
 
-        {/* </Camera> */}
+          {usersAvatars
+            .filter((avatar) => Boolean(avatar.id))
+            .map((avatar, index) => {
+              return (
+                <OtherAvatars
+                  key={index}
+                  AVATAR_X_POS={avatar.x}
+                  AVATAR_Y_POS={avatar.y}
+                  AVATAR_DIRECTION={avatar.direction}
+                  avatarId={avatar.id}
+                  AVATAR_IMAGE={avatar.avatar}
+                  AVATAR_USERNAME={avatar.username}
+                  nearbyPlayers={nearbyPlayers}
+                  chatMessage={chatMessage}
+                  isBubbleVisible={isBubbleVisible}
+                  chatMessageId={chatMessageId}
+                    heroPosition={heroPosition}    
+                />
+              );
+            })}
+        </Camera>
       </Container>
     </>
   );

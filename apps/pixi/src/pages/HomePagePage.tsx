@@ -18,6 +18,10 @@ const HomePagePage = () => {
         autoPlay
         muted
         loop
+        playsInline
+        disablePictureInPicture
+        disableRemotePlayback
+        controls={false}
         style={{
           position: "absolute",
           top: 0,
@@ -25,6 +29,7 @@ const HomePagePage = () => {
           width: "100%",
           height: "100%",
           objectFit: "cover",
+          pointerEvents: "none", // optional: prevent hover/click detection
         }}
       />
 

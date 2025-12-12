@@ -55,18 +55,31 @@ export const checkCanMove = (target: IPosition) => {
   return COLLISION_MAP[index] !== 1;
 };
 
-// assumes TILE_SIZE is imported
-export const isPlayerBlocking = (x: number, y: number, avatars: IAvatar[]) => {
-  // convert the provided x,y (pixels OR tiles) to tile coords safely:
-  const targetTileX = Math.round(x / TILE_SIZE);
-  const targetTileY = Math.round(y / TILE_SIZE);
-
+export function isPlayerBlocking(
+  targetX: number,
+  targetY: number,
+  avatars: IAvatar[]
+) {
+  // const TILE = 32;
+  const targetTile = {
+    col: Math.floor(targetX),
+    row: Math.floor(targetY),
+  };
+  // console.log("Is BLocking", targetX, targetY);
+  // console.log(avatars);
   return avatars.some((avatar) => {
-    const avatarTileX = Math.round(avatar.x / TILE_SIZE);
-    const avatarTileY = Math.round(avatar.y / TILE_SIZE);
-    return avatarTileX === targetTileX && avatarTileY === targetTileY;
+    const avatarTile = {
+      col: Math.floor(avatar.x),
+      row: Math.floor(avatar.y),
+    };
+    // console.log("PlyaerBoliking", targetTile, avatarTile);
+    if (avatarTile.col === targetTile.col && avatarTile.row === targetTile.row)
+      console.log("tile matched");
+    return (
+      avatarTile.col === targetTile.col && avatarTile.row === targetTile.row
+    );
   });
-};
+}
 
 export const moveTowards = (
   current: number,

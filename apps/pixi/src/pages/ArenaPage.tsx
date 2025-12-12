@@ -11,6 +11,7 @@ import { io } from "socket.io-client";
 import { setSocketData } from "../redux/socket/socketSlice";
 import type { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
+import GameNavbar from "../components/GameNavbar";
 
 const API = import.meta.env.VITE_USER_API_URL;
 const SOCKET_API = import.meta.env.VITE_SOCKET_API_URL;
@@ -28,7 +29,7 @@ const ArenaPage = () => {
         credentials: "include",
       });
 
-      const { token, userId, avatarId } = res.data;
+      const { token, userId, avatarId, username } = res.data;
 
       const socket = io(SOCKET_API, {
         transports: ["websocket"],
@@ -41,6 +42,7 @@ const ArenaPage = () => {
           token,
           userId,
           avatarId,
+          username,
         })
       );
     }
@@ -50,6 +52,7 @@ const ArenaPage = () => {
 
   return (
     <>
+      <GameNavbar />
       <Arena socket={socket} />
     </>
   );

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 // import { io, type Socket } from "socket.io-client";
 import { useAxiosAuth } from "../api/axiosClient";
 import MainContainer from "./MainContainer";
-import { Box, Button, Container, TextField } from "@mui/material";
+import { Container } from "@mui/material";
 import ChatInput from "./ChatInput";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
@@ -12,11 +12,16 @@ import type { RootState } from "../redux/store";
 const Arena = ({ socket }: any) => {
   const canvasSize = useDimensions();
   const [userSprite, setUserSprite] = useState<string>("");
+  const [userChat, setUserchat] = useState("");
+  const [userChatVisible, setUserchatVisible] = useState(false);
 
   const socketAvatarId = useSelector(
     (state: RootState) => state.socket.avatarId
   )!;
   const socketUserId = useSelector((state: RootState) => state.socket.userId)!;
+  const socketUsername = useSelector(
+    (state: RootState) => state.socket.username
+  )!;
   const axiosAuth = useAxiosAuth();
 
   // console.log(socketToken, socketUserId);
@@ -40,7 +45,7 @@ const Arena = ({ socket }: any) => {
         document.activeElement instanceof HTMLInputElement ||
         document.activeElement instanceof HTMLTextAreaElement ||
         document.activeElement?.getAttribute("contenteditable") === "true";
-
+      // console.log("chat open");
       if (isTyping) return;
 
       if (e.key === "c") {
@@ -74,14 +79,18 @@ const Arena = ({ socket }: any) => {
             socket={socket}
             socketAvatarId={socketAvatarId}
             socketUserId={socketUserId}
+            socketUsername={socketUsername}
+            chatInput={chatInput}
+            userChat={userChat}
+            userChatVisible={userChatVisible}
           />
         </Stage>
         <ChatInput
           chatInput={chatInput}
           setChatInput={setChatInput}
           chatOpen={chatOpen}
-          // handleSubmit={handleSubmit}
-          // socket={socket}
+          setUserchat={setUserchat}
+          setUserchatVisible={setUserchatVisible}
         />
       </Container>
     </>

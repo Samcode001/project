@@ -6,31 +6,37 @@ import type { RootState } from "../redux/store";
 interface IChatInput {
   chatInput: string;
   setChatInput: React.Dispatch<React.SetStateAction<string>>;
+  setUserchat: React.Dispatch<React.SetStateAction<string>>;
   chatOpen: boolean;
+  setUserchatVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ChatInput = ({
   chatInput,
   setChatInput,
+  setUserchat,
   chatOpen,
+  setUserchatVisible,
 }: PropsWithChildren<IChatInput>) => {
-  //   const { socket } = Socket();
-
   const socket = useSelector((state: RootState) => state.socket.socket);
-
+  const socketUserId = useSelector((state: RootState) => state.socket.userId);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!socket) return;
-    console.log(chatInput);
-    // const res = await axiosAuth.post("/chat", {
-    //   message: chatInput,
-    // });
-    // if (res.status === 200) {
-    setChatInput("");
-    socket.emit("chat-message", chatInput);
-    // }
-  };
+    // This is for the user to show his message in bubble
+    setUserchat(chatInput);
+    setUserchatVisible(true);
+    setTimeout(() => {
+      setUserchatVisible(false);
+    }, 15000);
 
+    // emiiting the chatmessage to other users
+    if (!socket) return;
+    setChatInput("");
+    socket.emit("chat-message", {
+      id: socketUserId,
+      chat: chatInput,
+    });
+  };
   return (
     <>
       <form onSubmit={handleSubmit}>

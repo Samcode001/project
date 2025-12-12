@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import HomePage from "./pages/HomePagePage";
+import ControlsPage from "./pages/ControlsPage";
 import { AuthProvider } from "./auth/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Profile } from "./pages/Profile";
@@ -33,6 +34,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ArenaPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/controls"
+              element={
+                <ProtectedRoute>
+                  <ControlsPage />
                 </ProtectedRoute>
               }
             />
