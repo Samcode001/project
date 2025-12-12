@@ -21,7 +21,12 @@ userRouter.get("/profile", authenticateAccessToken, async (req, res) => {
   });
   // console.log(userToken, user);
   if (!user) return res.status(404).json({ message: "User not found" });
-  return res.json({ id: user.id, username: user.username });
+  return res.json({
+    id: user.id,
+    username: user.username,
+    name: user.name,
+    avatarId: user.avatarId,
+  });
 });
 
 userRouter.put("/set-avatar", authenticateAccessToken, async (req, res) => {
@@ -62,7 +67,12 @@ userRouter.post("/socket", authenticateAccessToken, async (req, res) => {
   });
   // console.log(token, user);
   if (!user) return res.status(404).json({ message: "User not found" });
-  res.json({ token, userId: userObject.userId, avatarId: user.avatarId });
+  res.json({
+    token,
+    userId: userObject.userId,
+    avatarId: user.avatarId,
+    username: user.username,
+  });
 });
 
 userRouter.get("/avatar", authenticateAccessToken, async (req, res) => {

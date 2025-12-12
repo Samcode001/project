@@ -96,6 +96,10 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("other-avatar-move", data);
   });
 
+  socket.on("chat-message", (data) => {
+    socket.broadcast.emit("chat-message", data);
+  });
+
   /*  
   =====================================================================
    EVENT: USER DISCONNECTS
@@ -108,6 +112,7 @@ io.on("connection", (socket) => {
   */
   socket.on("disconnect", () => {
     console.log("User disconnected:", user.id);
+    socket.broadcast.emit("user-disconnected", user.id);
   });
 });
 
