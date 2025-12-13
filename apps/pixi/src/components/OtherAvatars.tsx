@@ -50,7 +50,7 @@ const OtherAvatars = ({
   AVATAR_DIRECTION,
   AVATAR_IMAGE,
   AVATAR_USERNAME,
-  nearbyPlayers,
+  // nearbyPlayers,
   avatarId,
   chatMessage,
   isBubbleVisible,
