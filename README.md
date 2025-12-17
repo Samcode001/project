@@ -1,135 +1,259 @@
-# Turborepo starter
+# Meta‑Collab 🚀
 
-This Turborepo starter is maintained by the Turborepo core team.
+A **real‑time multiplayer collaboration / metaverse platform** built as a **production‑ready monorepo**.
+Meta‑Collab focuses on **low‑latency real‑time interaction**, scalable backend services, and modern DevOps practices.
 
-## Using this example
+---
 
-Run the following command:
+## 🧠 What is Meta‑Collab?
 
-```sh
-npx create-turbo@latest
-```
+Meta‑Collab is a WebSocket‑heavy real‑time application where multiple users can:
 
-## What's inside?
+- Join shared virtual rooms
+- Move avatars in real time
+- Interact with other users instantly
+- Maintain persistent state using a database
 
-This Turborepo includes the following packages/apps:
+The project is designed to **simulate real‑world system design challenges** such as:
 
-### Apps and Packages
+- Real‑time networking
+- State synchronization
+- Backend scalability
+- Monorepo architecture
+- Dockerized deployment
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+---
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## 🖼️ Screenshots / Demo
 
-### Utilities
+### Lobby / Room View
 
-This Turborepo has some additional tools already setup for you:
+<p align="center">
+  <img src="docs/images/lobby.png" width="95%" />
+</p>
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+### Multiple Avatars Interaction
 
-### Build
+<p align="center">
+  <img src="docs/images/interaction.png" width="95%" />
+</p>
 
-To build all apps and packages, run the following command:
+### Real-time Movement / Chat
 
-```
-cd my-turborepo
+<p align="center">
+  <img src="docs/images/chat.png" width="95%" />
+</p>
+---
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+## 🏗️ Architecture Overview
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
+> _High‑level overview (diagram can be added later)_
 
 ```
-cd my-turborepo
+Frontend (React + PixiJS)
+        |
+        | HTTP (REST)
+        v
+   HTTP Server (Express)
+        |
+        | WebSocket Events
+        v
+   WS Server (Socket / WS)
+        |
+        | Cache / Pub‑Sub
+        v
+   Database (PostgreSQL via Prisma)
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+┌────────────┐
+│  PixiJS    │  ← Frontend (Canvas-based 2D rendering)
+│  Frontend  │
+└─────▲──────┘
+      │ WebSocket (bi-directional)
+      ▼
+┌────────────┐
+│ Node.js +  │  ← Real-time game server
+│ Socket.io  │
+└─────▲──────┘
+      │
+      └── PostgreSQL (persistent state)
+           via Prisma ORM
 
 ```
-cd my-turborepo
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+---
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## 📦 Monorepo Structure
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+project/
+├── apps/
+│   ├── pixi/        # React + PixiJS client
+│   ├── http/            # REST API server
+│   └── ws/              # WebSocket server
+│
+├── packages/
+│   └── db/              # Prisma database client
+│
+├── pnpm-workspace.yaml
+├── turbo.json
+└── README.md
 ```
 
-## Useful Links
+---
 
-Learn more about the power of Turborepo:
+## 🛠️ Tech Stack
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+### Frontend
+
+- React
+- PixiJS
+- TypeScript
+
+### Backend
+
+- Node.js
+- Express
+- WebSockets
+- Prisma ORM
+- PostgreSQL
+
+### DevOps / Infra
+
+- PNPM Workspaces
+- Turborepo
+- Docker & Docker Compose
+- AWS EC2 (planned)
+- Nginx (reverse proxy)
+
+---
+
+## 🚀 Getting Started (Local Development)
+
+### 1️⃣ Prerequisites
+
+- Node.js ≥ 18
+- PNPM
+- Docker (optional but recommended)
+
+---
+
+### 2️⃣ Install Dependencies
+
+```bash
+pnpm install
+```
+
+---
+
+### 3️⃣ Environment Variables
+
+Create environment files:
+
+```bash
+cp .env.example .env
+cp .env.ws.example .env.ws
+```
+
+> ⚠️ Do not commit real secrets
+
+---
+
+### 4️⃣ Build Packages
+
+```bash
+pnpm --filter @repo/db build
+pnpm --filter http build
+pnpm --filter ws build
+```
+
+---
+
+### 5️⃣ Start Services
+
+```bash
+pnpm --filter http start
+pnpm --filter ws start
+pnpm --filter frontend dev
+```
+
+---
+
+## 🐳 Docker Setup
+
+To run the entire stack using Docker:
+
+```bash
+docker compose build
+docker compose up
+```
+
+This will start:
+
+- Frontend
+- HTTP API
+- WebSocket server
+- Database
+- Redis
+
+---
+
+## 🌐 Deployment Strategy
+
+### Recommended (Early Stage)
+
+- **Frontend** → Vercel
+- **HTTP + WS** → Single EC2 instance (Docker)
+- **Nginx** → Reverse proxy for routing & SSL
+
+### Why?
+
+- Low cost
+- Simple scaling
+- Production‑like architecture
+
+---
+
+## 🧪 Testing (Planned)
+
+- Unit tests for core logic
+- Integration tests for APIs
+- WebSocket event testing
+
+---
+
+## 📌 Roadmap
+
+- [ ] Improve avatar movement reconciliation
+- [ ] Add proximity chat
+- [ ] Load testing WebSocket server
+- [ ] CI/CD with GitHub Actions
+- [ ] Kubernetes (optional)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repo
+2. Create a feature branch
+3. Commit changes
+4. Open a Pull Request
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+## 🙋 Author
+
+**Himanshu Jaiswal**
+Full‑Stack Developer | Real‑Time Systems Enthusiast
+
+---
+
+> ⭐ If you like this project, consider starring the repo!
