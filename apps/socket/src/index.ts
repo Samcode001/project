@@ -20,7 +20,7 @@ export const io = new Server(server, {
 
 // Basic test route
 app.get("/", (_, res) => {
-  res.send("<h1>Hello World</h1>");
+  res.send("<h1>Socket Healthy</h1>");
 });
 
 //  The SAME secret used in your HTTP server (access token)

@@ -21,10 +21,13 @@ app.use(
   })
 );
 
+app.get("/", (_, res) => {
+  res.send("<h1>Hello World</h1>");
+});
 app.use("/v1/auth", router);
 app.use("/v1/user", userRouter);
 // app.use(errorHandler);
 
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server running on http://localhost:${process.env.PORT || 3000}`);
 });
