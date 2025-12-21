@@ -20,6 +20,9 @@ const ChatInput = ({
 }: PropsWithChildren<IChatInput>) => {
   const socket = useSelector((state: RootState) => state.socket.socket);
   const socketUserId = useSelector((state: RootState) => state.socket.userId);
+
+  const bubbleTimer = import.meta.env.VITE_CHAT_BUBBLE_TIMEOUT;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // This is for the user to show his message in bubble
@@ -27,7 +30,7 @@ const ChatInput = ({
     setUserchatVisible(true);
     setTimeout(() => {
       setUserchatVisible(false);
-    }, 15000);
+    }, bubbleTimer);
 
     // emiiting the chatmessage to other users
     if (!socket) return;

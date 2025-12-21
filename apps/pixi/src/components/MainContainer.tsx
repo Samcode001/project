@@ -65,6 +65,8 @@ const MainContainer = ({
   const [chatMessageId, setChatMessageId] = useState("");
   const [isBubbleVisible, setIsBubbleVisible] = useState(false);
 
+  const bubbleTimer = import.meta.env.VITE_CHAT_BUBBLE_TIMEOUT;
+
   // const { socket, socketUserId, socketAvatarId } = Socket();
 
   useEffect(() => {
@@ -135,7 +137,7 @@ const MainContainer = ({
       setIsBubbleVisible(true);
       setTimeout(() => {
         setIsBubbleVisible(false);
-      }, 15000);
+      }, bubbleTimer);
     };
     socket.on("other-avatar-move", handleOthersAvatarMove);
     socket.on("user-disconnected", handleUserDisconnected);
@@ -218,7 +220,7 @@ const MainContainer = ({
                   chatMessage={chatMessage}
                   isBubbleVisible={isBubbleVisible}
                   chatMessageId={chatMessageId}
-                    heroPosition={heroPosition}    
+                  heroPosition={heroPosition}
                 />
               );
             })}
