@@ -29,5 +29,5 @@ app.use("/v1/user", userRouter);
 // app.use(errorHandler);
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log(`Server running on http://localhost:${process.env.PORT || 3000}`);
+  console.log(`Server running on http://localhost:${process.env.PORT}`);
 });

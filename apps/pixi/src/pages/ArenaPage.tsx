@@ -32,7 +32,7 @@ const ArenaPage = () => {
       const { token, userId, avatarId, username } = res.data;
 
       const socket = io(SOCKET_API, {
-        path: "/socket",
+        // path: "/socket",
         transports: ["websocket"],
         auth: { token },
       });

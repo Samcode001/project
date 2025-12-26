@@ -12,10 +12,10 @@ const server = createServer(app);
 
 //  Initialize Socket.io with CORS so your frontend can connect
 export const io = new Server(server, {
-  path: "/socket", // we are doing this to sockit.io calls in this url "BASE_URL + PATH + "/?EIO=4&transport=websocket" but nginx must be bypasss so we need to set the path
+  // path: "/socket", // we are doing this to sockit.io calls in this url "BASE_URL + PATH + "/?EIO=4&transport=websocket" but nginx must be bypasss so we need to set the path
 
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.SOCKET_CLIENT_ORIGIN,
     methods: ["GET", "POST"],
   },
 });
