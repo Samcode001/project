@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
-import { useNavigate } from "react-router-dom";
+import { Link as Routerlink, useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -9,6 +9,7 @@ import {
   Paper,
   createTheme,
   ThemeProvider,
+  Link,
 } from "@mui/material";
 
 const pixelTheme = createTheme({
@@ -79,6 +80,24 @@ const pixelTheme = createTheme({
         },
       },
     },
+
+    //   styleOverrides: {
+    //     root: {
+    //       color: "#d6ff00",
+    //       "&:hover": {
+    //         background: "#e4ff4e",
+    //         transform: "translate(-2px, -2px)",
+    //         boxShadow: "6px 6px 0 #4b00b3, 8px 8px 0 #250059",
+    //         padding: "2px 3px",
+    //       },
+    //       "&:active": {
+    //         transform: "translate(2px, 2px)",
+    //         boxShadow: "2px 2px 0 #4b00b3, 4px 4px 0 #250059",
+    //         padding: "2px 3px",
+    //       },
+    //     },
+    //   },
+    // },
     MuiAlert: {
       styleOverrides: {
         root: {
@@ -150,14 +169,16 @@ const SignIn = () => {
       <ThemeProvider theme={pixelTheme}>
         <Box
           sx={{
-            width: "100vw",
-            height: "100vh",
+            width: "97vw",
+            height: "93vh",
+            overflow: "hidden",
             background: "#000",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             padding: 2,
-            backgroundImage: 'url("/avatars/signin-bg.gif")',
+            backgroundImage:
+              'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("/avatars/signin-bg.jpg")',
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -232,7 +253,7 @@ const SignIn = () => {
                 textShadow: "2px 2px #6a00ff",
               }}
             >
-              CREATE ACCOUNT
+              NEXUS PLANET
             </Typography>
 
             <TextField
@@ -262,6 +283,26 @@ const SignIn = () => {
               <Button type="submit">
                 {loading ? "Processing..." : "Sign In"}
               </Button>
+            </Box>
+
+            <Box sx={{ textAlign: "center", mt: 3, color: "white" }}>
+              Don't have account?{" "}
+              <Link
+                component={Routerlink}
+                to="/signup"
+                sx={{
+                  color: "#d6ff00",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  textDecoration: "none", // Optional: removes the underline
+                  "&:hover": {
+                    textDecoration: "underline",
+                    color: "#f0ff00",
+                  },
+                }}
+              >
+                Register
+              </Link>
             </Box>
           </Paper>
         </Box>

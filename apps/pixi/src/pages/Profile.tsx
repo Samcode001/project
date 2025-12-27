@@ -121,6 +121,8 @@ export const Profile = () => {
           position: "absolute",
           inset: 0,
           backgroundImage: "url('/avatars/profile-bg.webp')", // subtle pixel grid
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
           opacity: 0.25,
           pointerEvents: "none",
         }}

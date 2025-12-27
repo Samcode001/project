@@ -13,6 +13,7 @@ import { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE } from "../constants/game-world";
 import OtherAvatars from "./OtherAvatars";
 import type { Direction } from "../types/common";
 import Camera from "./Camera";
+import { useBootStore } from "../store/bootstore";
 
 interface IMainContainerProps {
   canvasSize: {
@@ -164,7 +165,19 @@ const MainContainer = ({
 
   const heroTexture = useMemo(() => {
     if (!userSprite) return null;
-    return Texture.from(userSprite);
+    const texure = Texture.from(userSprite);
+
+    console.log("Texure created", {
+      valid: texure.baseTexture.valid,
+    });
+
+    texure.baseTexture.once("loaded", () => {
+      // at this point the image of avatar for user is finally loaded in browser
+      // console.log("Texure GPU Ready");
+      useBootStore.getState().markReady("AVATARS");
+    });
+
+    return texure;
   }, [userSprite]);
 
   const backgroundTexture = useMemo(() => {

@@ -38,6 +38,7 @@ const Arena = ({ socket }: any) => {
   useEffect(() => {
     getuserAvatar();
   }, []);
+  // console.log(useBootStore.getState().ready);
 
   useEffect(() => {
     const handleChatToggle = (e: KeyboardEvent) => {

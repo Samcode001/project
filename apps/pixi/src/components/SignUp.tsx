@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -9,6 +9,7 @@ import {
   Paper,
   createTheme,
   ThemeProvider,
+  Link,
 } from "@mui/material";
 
 const pixelTheme = createTheme({
@@ -74,6 +75,24 @@ const pixelTheme = createTheme({
         },
       },
     },
+    // MuiLink: {
+    //   styleOverrides: {
+    //     root: {
+    //       color: "#d6ff00",
+    //       "&:hover": {
+    //         background: "#e4ff4e",
+    //         transform: "translate(-2px, -2px)",
+    //         boxShadow: "6px 6px 0 #4b00b3, 8px 8px 0 #250059",
+    //         padding: "2px 3px",
+    //       },
+    //       "&:active": {
+    //         transform: "translate(2px, 2px)",
+    //         boxShadow: "2px 2px 0 #4b00b3, 4px 4px 0 #250059",
+    //         padding: "2px 3px",
+    //       },
+    //     },
+    //   },
+    // },
   },
 });
 
@@ -136,7 +155,8 @@ const SignUp = () => {
             justifyContent: "center",
             alignItems: "center",
             padding: 2,
-            backgroundImage: 'url("/avatars/signin-bg.gif")',
+            backgroundImage:
+              'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("/avatars/signin-bg.jpg")',
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -255,6 +275,26 @@ const SignUp = () => {
               <Button type="submit">
                 {loading ? "Processing..." : "Sign Up"}
               </Button>
+            </Box>
+
+            <Box sx={{ textAlign: "center", mt: 3, color: "whitesmoke" }}>
+              Already have account?{" "}
+              <Link
+                component={RouterLink}
+                to="/signIn"
+                sx={{
+                  color: "#d6ff00",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  textDecoration: "none", // Optional: removes the underline
+                  "&:hover": {
+                    textDecoration: "underline",
+                    // color: "#f0ff00",
+                  },
+                }}
+              >
+                Login
+              </Link>
             </Box>
           </Paper>
         </Box>

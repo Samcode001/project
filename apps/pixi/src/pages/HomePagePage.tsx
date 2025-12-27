@@ -22,6 +22,7 @@ const HomePagePage = () => {
         disablePictureInPicture
         disableRemotePlayback
         controls={false}
+        preload="auto"
         style={{
           position: "absolute",
           top: 0,
@@ -29,6 +30,7 @@ const HomePagePage = () => {
           width: "100%",
           height: "100%",
           objectFit: "cover",
+          aspectRatio: "16/9",
           pointerEvents: "none", // optional: prevent hover/click detection
         }}
       />
@@ -58,7 +60,9 @@ const HomePagePage = () => {
           textAlign: "center",
         }}
       >
-        <h1 style={{ marginBottom: "20px" }}>Welcome to Nexus World</h1>
+        <h1 style={{ marginBottom: "20px", fontSize: "3rem" }}>
+          Welcome to Nexus Planet
+        </h1>
 
         <button
           style={{
@@ -98,7 +102,7 @@ const HomePagePage = () => {
           }}
           onClick={() => navigate("/arena")}
         >
-          ENTER THE WORLD
+          ENTER THE PLANET
         </button>
       </div>
     </div>

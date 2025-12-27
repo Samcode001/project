@@ -1,5 +1,7 @@
 export type Direction = "UP" | "DOWN" | "LEFT" | "RIGHT" | undefined;
 
+export type ReadyKey = "SOCKET" | "AVATARS" | "PIXI";
+
 export interface IPosition {
   x: number;
   y: number;

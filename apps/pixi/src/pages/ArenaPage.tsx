@@ -1,5 +1,5 @@
 // import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 // import { useAxiosAuth } from "../api/axiosClient";
 import Arena from "../components/Arena";
 // import { io, type Socket } from "socket.io-client";
@@ -12,16 +12,22 @@ import { setSocketData } from "../redux/socket/socketSlice";
 import type { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
 import GameNavbar from "../components/GameNavbar";
+import { useBootStore } from "../store/bootstore";
+import { Box } from "@mui/material";
+import PlanetOverlay from "./ArenaOverlay";
 
 const API = import.meta.env.VITE_USER_API_URL;
 const SOCKET_API = import.meta.env.VITE_SOCKET_API_URL;
 
 const ArenaPage = () => {
   //   const axiosAuth = useAxiosAuth();
+  const [avatarLaoding, setAvatarLoading] = useState(false);
   const socket = useSelector((state: RootState) => state.socket.socket);
 
   const axiosAuth = useAxiosAuth();
   const dispatch = useAppDispatch();
+
+  const avatarReady = useBootStore((state) => state.ready.AVATARS);
 
   useEffect(() => {
     async function initSocket() {
@@ -51,10 +57,20 @@ const ArenaPage = () => {
     initSocket();
   }, []);
 
+  useEffect(() => {
+    if (avatarReady) {
+      setAvatarLoading(true);
+    }
+    // console.log(useBootStore.getState().ready.AVATARS);
+  }, [avatarReady]);
+
   return (
     <>
       <GameNavbar />
-      <Arena socket={socket} />
+      <Box>
+        <PlanetOverlay visible={!avatarLaoding} />
+        <Arena socket={socket} />
+      </Box>
     </>
   );
 };
